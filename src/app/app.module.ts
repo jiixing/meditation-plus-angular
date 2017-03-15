@@ -31,6 +31,7 @@ import { ProfileModule } from './profile';
 import { OnlineComponent } from './online';
 import { CommitmentComponent } from './commitment';
 import { UpdateComponent } from './update';
+import { WikiModule } from './wiki';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -69,7 +70,8 @@ const APP_PROVIDERS = [
     TestimonialModule,
     MessageModule,
     MeditationModule,
-    QuestionModule
+    QuestionModule,
+    WikiModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
