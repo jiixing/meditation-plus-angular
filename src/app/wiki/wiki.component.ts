@@ -10,6 +10,8 @@ import { Component } from '@angular/core';
 })
 
 export class WikiComponent {
+  videoUrl: string;
+
   nodes = [
     {
       id: 1,
@@ -34,4 +36,16 @@ export class WikiComponent {
       ]
     }
   ];
+
+  play(evt) {
+    if (!evt.node.data || !evt.node.data.videoId) {
+      return;
+    }
+
+    this.videoUrl = 'https://www.youtube.com/embed/' + evt.node.data.videoId + '?autoplay=1';
+  }
+
+  stop(evt) {
+
+  }
 }

@@ -1,1 +1,13 @@
-<tree-root [nodes]="nodes"></tree-root>
+<div *ngIf="videoUrl">
+  <iframe
+    [src]="videoUrl | safe"
+    frameborder="0"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<tree-root
+  [nodes]="nodes"
+  (onActivate)="play($event)"
+  (onBlur)="stop($event)"
+></tree-root>
