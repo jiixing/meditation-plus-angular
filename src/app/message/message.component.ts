@@ -18,6 +18,7 @@ import { FormControl } from '@angular/forms';
 export class MessageComponent implements OnInit, OnDestroy {
 
   @ViewChild('messageList', {read: ElementRef}) messageList: ElementRef;
+  @ViewChild('message', {read: ElementRef}) messageElem: ElementRef;
 
   messages: Message[];
   messageSocket;
@@ -34,6 +35,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   menuOpen = false;
 
   messageControl: FormControl = new FormControl();
+  mentionQuery: string;
 
   constructor(
     public messageService: MessageService,
@@ -236,8 +238,24 @@ export class MessageComponent implements OnInit, OnDestroy {
       .debounceTime(360)
       .distinctUntilChanged()
       .subscribe(val => {
-        console.log(val);
+        const caretPosition = this.getCaretPosition(this.messageElem.nativeElement);
+        const textBeforeCaret = val.substring(0, caretPosition);
+
+        this.mentionQuery = this.getMention(textBeforeCaret);
+        console.log(textBeforeCaret, this.mentionQuery);
       });
+  }
+
+  getCaretPosition(elem: HTMLElement): number {
+    return elem['selectionEnd']
+      ? elem['selectionEnd']
+      : (elem.innerHTML.length > 0 ? elem.innerHTML.length - 1 : 0);
+  }
+
+  getMention(text: string): string {
+    // matches "@Jon" or "@Jon Doe", but not "@Jon Doe Junior"
+    const possibleMention = text.match(new RegExp('@[^@\\s]+(\\s[^@\\s]+)?$', 'gi'));
+    return possibleMention ? possibleMention[0].substring(1) : '';
   }
 
   scrollToBottom() {
