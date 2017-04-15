@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared';
 import { MessageComponent } from './message.component';
@@ -13,6 +13,7 @@ import { MomentModule } from 'angular2-moment';
     SharedModule,
     ProfileModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     EmojiModule,
     MomentModule

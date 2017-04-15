@@ -6,6 +6,7 @@ import { UserService } from '../user/user.service';
 import { Message, MessageWebsocketResponse } from './message';
 import * as moment from 'moment';
 import { WebsocketService } from '../shared';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'message',
@@ -31,6 +32,8 @@ export class MessageComponent implements OnInit, OnDestroy {
   noMorePages = false;
   loadingPage = false;
   menuOpen = false;
+
+  messageControl: FormControl = new FormControl();
 
   constructor(
     public messageService: MessageService,
@@ -228,6 +231,13 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.updateSocket = this.messageService.getUpdateSocket()
       .map(res => res.populated)
       .subscribe(data => this.updateMessage(data));
+
+    this.messageControl.valueChanges
+      .debounceTime(360)
+      .distinctUntilChanged()
+      .subscribe(val => {
+        console.log(val);
+      });
   }
 
   scrollToBottom() {

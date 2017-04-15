@@ -39,6 +39,7 @@
         mdTextareaAutosize
         name="message"
         [(ngModel)]="currentMessage"
+        [formControl]="messageControl"
         placeholder="Type message..."
         class="fill message-input"
         #message
