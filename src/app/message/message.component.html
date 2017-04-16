@@ -26,7 +26,7 @@
     </div>
   </md-list>
 </div>
-
+<autocomplete [query]="mentionQuery" (select)="addMention($event)"></autocomplete>
 <md-card>
   <emoji-select *ngIf="showEmojiSelect" (selected)="emojiSelect($event)"></emoji-select>
   <form (submit)="sendMessage($event, messageAutoSize)" class="flex">
@@ -48,7 +48,7 @@
         autocomplete="off"
         [disabled]="sending"
         rows="1"
-        (keypress)="enterMessage($event, messageAutoSize)"
+        (keypress)="keyEvents($event, messageAutoSize)"
       ></textarea>
       <md-hint align="end" *ngIf="message.value.length > 0">{{ message.value.length }} / 1000</md-hint>
     </md-input-container>

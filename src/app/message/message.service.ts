@@ -64,6 +64,16 @@ export class MessageService {
     });
   }
 
+  public autocomplete(query: string): Observable<any> {
+    return this.authHttp.post(
+      ApiConfig.url + '/api/message/autocomplete',
+      JSON.stringify({ query: query }), {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    });
+  }
+
   /**
    * Initializes Socket.io client with Jwt and listens to 'message'.
    */

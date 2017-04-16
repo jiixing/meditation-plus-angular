@@ -7,6 +7,7 @@ import { Message, MessageWebsocketResponse } from './message';
 import * as moment from 'moment';
 import { WebsocketService } from '../shared';
 import { FormControl } from '@angular/forms';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 
 @Component({
   selector: 'message',
@@ -19,6 +20,8 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   @ViewChild('messageList', {read: ElementRef}) messageList: ElementRef;
   @ViewChild('message', {read: ElementRef}) messageElem: ElementRef;
+
+  @ViewChild(AutocompleteComponent) autocomplete: AutocompleteComponent;
 
   messages: Message[];
   messageSocket;
@@ -36,6 +39,8 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   messageControl: FormControl = new FormControl();
   mentionQuery: string;
+
+  mentions: any[] = [];
 
   constructor(
     public messageService: MessageService,
@@ -155,11 +160,16 @@ export class MessageComponent implements OnInit, OnDestroy {
    * @param {[type]} evt             JavaScript event
    * @param {[type]} messageAutoSize Autosize property for passing it into 'sendMessage'
    */
-  enterMessage(evt, messageAutoSize) {
-    const charCode = evt.which || evt.keyCode;
+  keyEvents(evt, messageAutoSize) {
+    if (this.autocomplete.isOpened) {
+      // pass on event if autocomplete is opened
+      this.autocomplete.keyEvents(evt);
+    } else {
+      const charCode = evt.which || evt.keyCode;
 
-    if (charCode === 13) {
-      this.sendMessage(evt, messageAutoSize);
+      if (charCode === 13) {
+        this.sendMessage(evt, messageAutoSize);
+      }
     }
   }
 
@@ -246,7 +256,7 @@ export class MessageComponent implements OnInit, OnDestroy {
       });
   }
 
-  getCaretPosition(elem: HTMLElement): number {
+  getCaretPosition(elem: HTMLInputElement): number {
     return elem['selectionEnd']
       ? elem['selectionEnd']
       : (elem.innerHTML.length > 0 ? elem.innerHTML.length - 1 : 0);
@@ -256,6 +266,29 @@ export class MessageComponent implements OnInit, OnDestroy {
     // matches "@Jon" or "@Jon Doe", but not "@Jon Doe Junior"
     const possibleMention = text.match(new RegExp('@[^@\\s]+(\\s[^@\\s]+)?$', 'gi'));
     return possibleMention ? possibleMention[0].substring(1) : '';
+  }
+
+  addMention(user) {
+    if (!user) {
+      return;
+    }
+
+    const caretPosition = this.getCaretPosition(this.messageElem.nativeElement);
+    let textBeforeCaret = this.currentMessage.substring(0, caretPosition);
+    const mention = this.getMention(textBeforeCaret);
+
+    if (user.name.match(new RegExp(mention, 'gi'))) {
+      if (this.mentions.indexOf(user) === -1) {
+        this.mentions.push(user);
+      }
+
+      // update message in textarea
+      textBeforeCaret =
+        textBeforeCaret.substring(0, textBeforeCaret.length - mention.length) + user.name + ' ';
+
+      this.currentMessage =
+        textBeforeCaret + this.currentMessage.substring(caretPosition);
+    }
   }
 
   scrollToBottom() {
