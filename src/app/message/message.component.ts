@@ -245,14 +245,13 @@ export class MessageComponent implements OnInit, OnDestroy {
       .subscribe(data => this.updateMessage(data));
 
     this.messageControl.valueChanges
-      .debounceTime(360)
+      .debounceTime(300)
       .distinctUntilChanged()
       .subscribe(val => {
         const caretPosition = this.getCaretPosition(this.messageElem.nativeElement);
         const textBeforeCaret = val.substring(0, caretPosition);
 
         this.mentionQuery = this.getMention(textBeforeCaret);
-        console.log(textBeforeCaret, this.mentionQuery);
       });
   }
 
