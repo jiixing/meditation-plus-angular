@@ -288,6 +288,8 @@ export class MessageComponent implements OnInit, OnDestroy {
 
       this.currentMessage =
         textBeforeCaret + this.currentMessage.substring(caretPosition);
+
+      this.messageElem.nativeElement.focus();
     }
   }
 

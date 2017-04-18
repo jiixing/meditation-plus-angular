@@ -1,0 +1,42 @@
+:host
+  width: 100%
+  z-index: 999
+
+div.wrapper
+  background: #fff
+  border-top: 2px solid
+  border-bottom: 1px solid #ccc;
+
+div.info
+  display: flex
+  justify-content: space-between
+  border-bottom: 1px solid #ccc
+
+div.info span
+  font-size: 11px
+  text-transform: uppercase
+  margin: 5px
+
+div.list > div
+  padding: 4px
+  cursor: pointer
+
+div.list > div:hover
+  background: lightblue
+
+div.list > div > *
+  display: inline-block
+  vertical-align: middle
+
+div.list span
+  font-size: 12px
+  font-weight: bold
+
+div.list img
+  width: 25px
+  height: 25px
+  border-radius: 50%
+  margin-left: 8px
+
+div.list > .selected
+  background: blue

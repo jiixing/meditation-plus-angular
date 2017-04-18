@@ -26,7 +26,10 @@
     </div>
   </md-list>
 </div>
-<autocomplete [query]="mentionQuery" (select)="addMention($event)"></autocomplete>
+<autocomplete
+  [query]="mentionQuery"
+  (select)="addMention($event)"
+></autocomplete>
 <md-card>
   <emoji-select *ngIf="showEmojiSelect" (selected)="emojiSelect($event)"></emoji-select>
   <form (submit)="sendMessage($event, messageAutoSize)" class="flex">

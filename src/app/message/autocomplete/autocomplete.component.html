@@ -1,0 +1,24 @@
+<div *ngIf="opened && users && users.length" class="wrapper">
+  <div class="info">
+    <span>people matching "@<b>{{ query }}</b>"</span>
+    <span>
+      <b>tab</b> or <b>enter</b> to select, <b>↑↓</b> to navigate, <b>esc</b> to close
+    </span>
+  </div>
+  <p *ngIf="loading">Loading ...</p>
+  <div *ngIf="!loading" class="list">
+    <div
+      *ngFor="let user of users; let i = index"
+      (click)="submit(i)"
+      [class.selected]="i === selectedIndex"
+    >
+      <img
+        *ngIf="user"
+        avatar
+        [hash]="user.gravatarHash"
+        [size]="25"
+      >
+      <span>{{ user.name }}</span>
+    </div>
+  </div>
+</div>
