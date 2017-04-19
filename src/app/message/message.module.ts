@@ -8,6 +8,7 @@ import { MessageListEntryComponent } from './list-entry/message-list-entry.compo
 import { EmojiModule } from '../emoji';
 import { ProfileModule } from '../profile';
 import { MomentModule } from 'angular2-moment';
+import { MentionsPipe } from './list-entry/mentions.pipe';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { MomentModule } from 'angular2-moment';
   declarations: [
     MessageComponent,
     MessageListEntryComponent,
-    AutocompleteComponent
+    AutocompleteComponent,
+    MentionsPipe
   ],
   exports: [
     MessageComponent,

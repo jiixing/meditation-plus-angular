@@ -140,7 +140,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     }
 
     this.sending = true;
-    this.messageService.post(this.currentMessage)
+    this.messageService.post(this.currentMessage, this.mentions)
       .subscribe(() => {
         this.sending = false;
         this.currentMessage = '';
@@ -271,6 +271,12 @@ export class MessageComponent implements OnInit, OnDestroy {
     if (!user) {
       return;
     }
+
+    // only pass necessary information for mentions
+    user = {
+      _id: user._id,
+      name: user.name
+    };
 
     const caretPosition = this.getCaretPosition(this.messageElem.nativeElement);
     let textBeforeCaret = this.currentMessage.substring(0, caretPosition);

@@ -25,10 +25,13 @@ export class MessageService {
     );
   }
 
-  public post(message: string): Observable<any> {
+  public post(message: string, mentions: any[]): Observable<any> {
     return this.authHttp.post(
       ApiConfig.url + '/api/message',
-      JSON.stringify({ text: message }), {
+      JSON.stringify({
+        text: message,
+        mentions: mentions
+      }), {
       headers: new Headers({
         'Content-Type': 'application/json'
       })

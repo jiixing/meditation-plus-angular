@@ -34,6 +34,10 @@ export class MessageListEntryComponent implements OnInit {
   constructor(public messageService: MessageService) {}
 
   public ngOnInit() {
+    if (this.message['mentions']) {
+      console.log(this.message);
+    }
+
     this.trigger.onMenuClose.subscribe(() => {
       this.menuClosed.emit();
       this.localMenuOpen = false;
