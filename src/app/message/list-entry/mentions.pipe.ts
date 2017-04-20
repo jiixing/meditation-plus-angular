@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
 /*
  * Raise the value exponentially
@@ -11,8 +12,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 */
 @Pipe({name: 'mention'})
 export class MentionsPipe implements PipeTransform {
-  transform(text: string, mentions: any[]): string {
-    console.log(mentions, text);
-    return text;
+  constructor(private sanitizer: DomSanitizer) {}
+
+  transform(text: string, mentions: any) {
+    mentions.map(m => {
+      text = text.replace(
+        new RegExp('@' + m.name, 'g'),
+        `<a style="text-decoration:none;font-weight:bold;color:#000;" href="/profile/${m._id}">@${m.name}</a>`
+      );
+    });
+
+    return this.sanitizer.bypassSecurityTrustHtml(text);
   }
 }

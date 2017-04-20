@@ -1,6 +1,4 @@
 <md-list-item
-  long-press
-  (click)="showMenu()"
   [class.menu-open]="localMenuOpen"
 >
   <img
@@ -44,7 +42,7 @@
   <p md-line *ngIf="admin || !message.deleted">
     <span
       class="chat-text"
-      [innerHTML]="message.text|emoji|linky:{twitter:false}|mention:{mentions:message.mentions}"
+      [innerHTML]="message.text|emoji|linky:{twitter:false}|mention:message.mentions"
     ></span>
   </p>
 </md-list-item>

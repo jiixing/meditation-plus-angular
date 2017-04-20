@@ -263,8 +263,10 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   getMention(text: string): string {
     // matches "@Jon" or "@Jon Doe", but not "@Jon Doe Junior"
-    const possibleMention = text.match(new RegExp('@[^@\\s]+(\\s[^@\\s]+)?$', 'gi'));
-    return possibleMention ? possibleMention[0].substring(1) : '';
+    const possibleMention = text.match(new RegExp('@[^@\\s]*(\\s[^@\\s]+)?$', 'gi'));
+    return possibleMention ?
+      (possibleMention[0] === '@' ? '.*' : possibleMention[0].substring(1))
+      : '';
   }
 
   addMention(user) {
