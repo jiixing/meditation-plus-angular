@@ -157,25 +157,6 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Intercept the keypress of 'Enter' and submit message.
-   * @param {[type]} evt             JavaScript event
-   * @param {[type]} messageAutoSize Autosize property for passing it into 'sendMessage'
-   */
-  keyEvents(evt, messageAutoSize) {
-    if (this.autocomplete.isOpened) {
-      // pass on event if autocomplete is opened
-      this.autocomplete.keyEvents(evt);
-    } else {
-      console.log('HERE');
-      const charCode = evt.which || evt.keyCode;
-
-      if (charCode === 13) {
-        this.sendMessage(evt, messageAutoSize);
-      }
-    }
-  }
-
-  /**
    * Registers scrolling as observable.
    */
   registerScrolling() {

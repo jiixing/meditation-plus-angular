@@ -51,7 +51,8 @@
         autocomplete="off"
         [disabled]="sending"
         rows="1"
-        (keypress)="keyEvents($event, messageAutoSize)"
+        (keydown.enter)="!autocomplete.opened && sendMessage($event, messageAutoSize)"
+        (keydown)="autocomplete.keyEvents($event)"
       ></textarea>
       <md-hint align="end" *ngIf="message.value.length > 0">{{ message.value.length }} / 1000</md-hint>
     </md-input-container>

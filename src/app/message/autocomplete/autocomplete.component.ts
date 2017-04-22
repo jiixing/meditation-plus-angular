@@ -30,6 +30,7 @@ export class AutocompleteComponent implements OnChanges {
 
   ngOnChanges() {
     if (this.query) {
+      this.opened = true;
       this.loading = true;
       this.messageService.autocomplete(this.query)
         .map(res => res.json())
@@ -42,12 +43,17 @@ export class AutocompleteComponent implements OnChanges {
           }
         });
     } else {
+      this.opened = false;
       this.loading = false;
       this.users = [];
     }
   }
 
   submit(index = -1) {
+    if (!this.users) {
+      return;
+    }
+
     if (index > -1 ) {
       this.selectedIndex = index;
     }
@@ -70,11 +76,19 @@ export class AutocompleteComponent implements OnChanges {
   }
 
   public moveUp() {
+    if (!this.users) {
+      return;
+    }
+
     const temp = --this.selectedIndex;
     this.selectedIndex = temp === -1 ? this.users.length - 1 : temp;
   }
 
   public moveDown() {
+    if (!this.users) {
+      return;
+    }
+
     this.selectedIndex = ++this.selectedIndex % this.users.length;
   }
 
