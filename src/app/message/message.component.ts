@@ -40,7 +40,8 @@ export class MessageComponent implements OnInit, OnDestroy {
   messageControl: FormControl = new FormControl();
   mentionQuery: string;
 
-  mentions: any[] = [];
+  // array of user ids
+  mentions: string[] = [];
 
   constructor(
     public messageService: MessageService,
@@ -165,6 +166,7 @@ export class MessageComponent implements OnInit, OnDestroy {
       // pass on event if autocomplete is opened
       this.autocomplete.keyEvents(evt);
     } else {
+      console.log('HERE');
       const charCode = evt.which || evt.keyCode;
 
       if (charCode === 13) {
@@ -264,9 +266,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   getMention(text: string): string {
     // matches "@Jon" or "@Jon Doe", but not "@Jon Doe Junior"
     const possibleMention = text.match(new RegExp('@[^@\\s]*(\\s[^@\\s]+)?$', 'gi'));
-    return possibleMention ?
-      (possibleMention[0] === '@' ? '.*' : possibleMention[0].substring(1))
-      : '';
+    return possibleMention ? possibleMention[0].substring(1) : '';
   }
 
   addMention(user) {
@@ -274,19 +274,13 @@ export class MessageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // only pass necessary information for mentions
-    user = {
-      _id: user._id,
-      name: user.name
-    };
-
     const caretPosition = this.getCaretPosition(this.messageElem.nativeElement);
     let textBeforeCaret = this.currentMessage.substring(0, caretPosition);
     const mention = this.getMention(textBeforeCaret);
 
     if (user.name.match(new RegExp(mention, 'gi'))) {
       if (this.mentions.indexOf(user) === -1) {
-        this.mentions.push(user);
+        this.mentions.push(user._id);
       }
 
       // update message in textarea

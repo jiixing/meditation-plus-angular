@@ -58,7 +58,7 @@ export class AutocompleteComponent implements OnChanges {
   }
 
   public isOpened(): boolean {
-    return this.opened;
+    return this.opened && this.users.length > 0;
   }
 
   public open() {
