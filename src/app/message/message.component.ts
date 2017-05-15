@@ -59,13 +59,13 @@ export class MessageComponent implements OnInit, OnDestroy {
     // match usernames from chat
     const matches = this.usernames.filter(name => new RegExp('^' + str, 'i').test(name));
     if (matches.length > 0) {
-      this.currentMessage += matches[0].substring(str.length) + ' ';
+      this.currentMessage = this.currentMessage.slice(0, -1 * str.length) + matches[0];
     } else {
       this.userService.getUsername(str)
         .map(res => res.json())
         .subscribe(username => {
           if (username.length > 0) {
-            this.currentMessage += username.toString().substring(str.length) + ' ';
+            this.currentMessage = this.currentMessage.slice(0, -1 * str.length) + username;
           }
         });
     }
