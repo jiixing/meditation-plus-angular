@@ -17,6 +17,7 @@ import { WebsocketService } from '../shared';
 export class MessageComponent implements OnInit, OnDestroy {
 
   @ViewChild('messageList', {read: ElementRef}) messageList: ElementRef;
+  @ViewChild('message', {read: ElementRef}) messageElem: ElementRef;
 
   messages: Message[];
   messageSocket;
@@ -46,28 +47,37 @@ export class MessageComponent implements OnInit, OnDestroy {
     return this.userService.isAdmin();
   }
 
+
+
+
   /**
    * Find the first matching username for given search string
    * @param  {string} str search
    * @return {string}     username
    */
-  autocomplete(str: string): void {
-    if (!this.usernames || !str) {
+  autocomplete(caretPosition: number): void {
+    if (!this.usernames) {
       return;
     }
 
-    // match usernames from chat
-    const matches = this.usernames.filter(name => new RegExp('^' + str, 'i').test(name));
-    if (matches.length > 0) {
-      this.currentMessage = this.currentMessage.slice(0, -1 * str.length) + matches[0];
-    } else {
-      this.userService.getUsername(str)
-        .map(res => res.json())
-        .subscribe(username => {
-          if (username.length > 0) {
-            this.currentMessage = this.currentMessage.slice(0, -1 * str.length) + username;
-          }
-        });
+    const textBeforeCaret = this.currentMessage.substring(0, caretPosition);
+    const search = textBeforeCaret.match(/@\w+$/g);
+
+    if (search) {
+      const matches = this.usernames.filter(name => new RegExp('^' + search[0].substring(1), 'i').test(name));
+
+      if (matches.length > 0) {
+        this.currentMessage = textBeforeCaret.slice(0, 1 - search[0].length) + matches[0] + ' ' + this.currentMessage.substring(caretPosition);
+      } else {
+        this.userService.getUsername(search[0])
+          .map(res => res.json())
+          .subscribe(username => {
+            if (username.length > 0) {
+              this.currentMessage = textBeforeCaret.slice(0, 1 - search[0].length) + matches[0] + ' ' + this.currentMessage.substring(caretPosition);
+            }
+          });
+      }
+
     }
   }
 
@@ -206,11 +216,8 @@ export class MessageComponent implements OnInit, OnDestroy {
       // TAB
       evt.preventDefault();
 
-      const search = this.currentMessage.match(/@\w+?$/);
-
-      if (search) {
-        this.autocomplete(search[0].substring(1));
-      }
+      const caretPosition = evt.target.selectionEnd ? evt.target.selectionEnd : this.currentMessage.length;
+      this.autocomplete(caretPosition);
     }
   }
 
