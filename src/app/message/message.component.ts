@@ -51,7 +51,8 @@ export class MessageComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Find the first matching username for given search string
+   * Find the first matching username for given search string.
+   *
    * @param  {string} str search
    * @return {string}     username
    */
@@ -60,7 +61,7 @@ export class MessageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const textBeforeCaret = this.currentMessage.substring(0, caretPosition);
+    let textBeforeCaret = this.currentMessage.substring(0, caretPosition);
     const search = textBeforeCaret.match(/@\w+$/g);
 
     if (search) {
@@ -68,20 +69,15 @@ export class MessageComponent implements OnInit, OnDestroy {
         .filter(name => new RegExp('^' + search[0].substring(1) + '$', 'i').test(name));
 
       if (matches.length > 0) {
-        this.currentMessage =
-          textBeforeCaret.slice(0, 1 - search[0].length)
-          + matches[0] + ' '
-          + this.currentMessage.substring(caretPosition);
-
+        textBeforeCaret = textBeforeCaret.slice(0, 1 - search[0].length) + matches[0] + ' ';
+        this.currentMessage = textBeforeCaret + this.currentMessage.substring(caretPosition);
       } else {
         this.userService.getUsername(search[0])
           .map(res => res.json())
           .subscribe(username => {
             if (username.length > 0) {
-              this.currentMessage =
-                textBeforeCaret.slice(0, 1 - search[0].length)
-                + matches[0] + ' '
-                + this.currentMessage.substring(caretPosition);
+              textBeforeCaret = textBeforeCaret.slice(0, 1 - search[0].length) + matches[0] + ' ';
+              this.currentMessage = textBeforeCaret + this.currentMessage.substring(caretPosition);
             }
           });
       }
@@ -223,9 +219,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     } else if (charCode === 9)  {
       // TAB
       evt.preventDefault();
-
-      const caretPosition = evt.target.selectionEnd ? evt.target.selectionEnd : this.currentMessage.length;
-      this.autocomplete(caretPosition);
+      this.autocomplete(evt.target.selectionEnd ? evt.target.selectionEnd : this.currentMessage.length);
     }
   }
 
