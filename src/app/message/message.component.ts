@@ -47,12 +47,8 @@ export class MessageComponent implements OnInit, OnDestroy {
     return this.userService.isAdmin();
   }
 
-
-
-
   /**
-   * Find the first matching username for given search string.
-   *
+   * Find the first matching username for given search string
    * @param  {string} str search
    * @return {string}     username
    */
@@ -64,11 +60,16 @@ export class MessageComponent implements OnInit, OnDestroy {
     let textBeforeCaret = this.currentMessage.substring(0, caretPosition);
     const search = textBeforeCaret.match(/@\w+$/g);
 
+    console.log('search', search);
+
     if (search) {
+      console.log(this.usernames);
       const matches = this.usernames
-        .filter(name => new RegExp('^' + search[0].substring(1) + '$', 'i').test(name));
+        .filter(name => new RegExp('^' + search[0].substring(1), 'i').test(name));
+        console.log(matches);
 
       if (matches.length > 0) {
+        console.log('matches', matches);
         textBeforeCaret = textBeforeCaret.slice(0, 1 - search[0].length) + matches[0] + ' ';
         this.currentMessage = textBeforeCaret + this.currentMessage.substring(caretPosition);
       } else {
@@ -219,6 +220,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     } else if (charCode === 9)  {
       // TAB
       evt.preventDefault();
+      console.log('Caret', evt.target.selectionEnd ? evt.target.selectionEnd : this.currentMessage.length);
       this.autocomplete(evt.target.selectionEnd ? evt.target.selectionEnd : this.currentMessage.length);
     }
   }
