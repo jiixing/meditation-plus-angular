@@ -64,16 +64,24 @@ export class MessageComponent implements OnInit, OnDestroy {
     const search = textBeforeCaret.match(/@\w+$/g);
 
     if (search) {
-      const matches = this.usernames.filter(name => new RegExp('^' + search[0].substring(1) + '$', 'i').test(name));
+      const matches = this.usernames
+        .filter(name => new RegExp('^' + search[0].substring(1) + '$', 'i').test(name));
 
       if (matches.length > 0) {
-        this.currentMessage = textBeforeCaret.slice(0, 1 - search[0].length) + matches[0] + ' ' + this.currentMessage.substring(caretPosition);
+        this.currentMessage =
+          textBeforeCaret.slice(0, 1 - search[0].length)
+          + matches[0] + ' '
+          + this.currentMessage.substring(caretPosition);
+
       } else {
         this.userService.getUsername(search[0])
           .map(res => res.json())
           .subscribe(username => {
             if (username.length > 0) {
-              this.currentMessage = textBeforeCaret.slice(0, 1 - search[0].length) + matches[0] + ' ' + this.currentMessage.substring(caretPosition);
+              this.currentMessage =
+                textBeforeCaret.slice(0, 1 - search[0].length)
+                + matches[0] + ' '
+                + this.currentMessage.substring(caretPosition);
             }
           });
       }
