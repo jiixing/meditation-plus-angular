@@ -52,6 +52,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       .filter(res => res.hasOwnProperty('tab'))
       .subscribe(res => this.currentTab = (<any>res).tab);
 
+  }
+
+  installIntervalTimer() {
     // periodically update countdown
     this.countdownSub = Observable.interval(5000)
       .subscribe(() => this.setCountdown());
@@ -72,6 +75,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     if (timeDiff.asMinutes() < 0) {
       this.nextAppointments.shift();
       this.setCountdown();
+      return;
     }
 
     this.countdown =
@@ -318,6 +322,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.installIntervalTimer();
     this.loadAppointments();
     this.loadIncrement();
 
@@ -340,6 +345,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.appointmentSocket.unsubscribe();
-    this.countdownSub.unsubscribe();
+    if (this.countdownSub) {
+      this.countdownSub.unsubscribe();
+    }
   }
 }
