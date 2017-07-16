@@ -9,6 +9,7 @@ import { FakeUserService } from '../user/testing/fake-user.service';
 import { AppointmentService } from './appointment.service';
 import { FakeAppointmentService } from './testing/fake-appointment.service';
 import { AvatarDirective } from '../profile/avatar.directive';
+import { By } from "@angular/platform-browser";
 
 describe('AppointmentComponent', () => {
   let component: AppointmentComponent;
@@ -42,4 +43,19 @@ describe('AppointmentComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should not display countdown initially', () => {
+    expect(
+      fixture.debugElement.query(By.css('countdown'))
+    ).toBeNull();
+  });
+
+  fit('should display countdown', () => {
+    component.setCountdown();
+    expect(
+      fixture.debugElement.query(By.css('countdown'))
+    ).toBeTruthy();
+  });
+
 });
+
