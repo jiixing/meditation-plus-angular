@@ -20,8 +20,8 @@ describe('AppointmentComponent', () => {
   const currentYear = 2015, currentMonth = 5, currentDay = 3,
     currentHour = 10, currenMinute = 30;
 
-  function mockCurrentUser() {
-    spyOn(mockUserService, 'getUserId').and.returnValue(mockUserId);
+  function mockCurrentUser(user_id = mockUserId) {
+    spyOn(mockUserService, 'getUserId').and.returnValue(user_id);
   }
 
   function createMockAppointment(user_id = null, time_offset = 100) {
@@ -63,6 +63,7 @@ describe('AppointmentComponent', () => {
     fixture = TestBed.createComponent(AppointmentComponent);
     component = fixture.componentInstance;
 
+    // stub component time for testing purpose
     component.getLocalTimezone = () => {
       return 'America/Toronto';
     };
@@ -75,6 +76,7 @@ describe('AppointmentComponent', () => {
         'minute': currenMinute
       });
     };
+
     // stub installIntervalTimer so component can stabilize for testing
     component.installIntervalTimer = () => {
     };
@@ -110,10 +112,27 @@ describe('AppointmentComponent', () => {
     });
   });
 
-  it('should not display countdown for different user', (done) => {
-    mockCurrentUser();
+  it('should display countdown for admin', (done) => {
+    mockCurrentUser(mockUserId + 1);
+    spyOn(mockUserService, 'isAdmin').and.returnValue(true);
 
-    const mockAppointment = createMockAppointment();
+    const mockAppointment = createMockAppointment(mockUserId);
+    spyOn(mockAppointmentService, 'getAll').and.returnValue(mockAppointment);
+    component.loadAppointments();
+
+    // wait until all promise resolve
+    TestHelper.advance(fixture).then(() => {
+      const compiled = fixture.debugElement.nativeElement;
+      const countdown_length = compiled.querySelectorAll('.countdown').length;
+      expect(countdown_length).toBe(1);
+      done();
+    });
+  });
+
+  it('should not display countdown for different user', (done) => {
+    mockCurrentUser(mockUserId + 1);
+
+    const mockAppointment = createMockAppointment(mockUserId + 2);
     spyOn(mockAppointmentService, 'getAll').and.returnValue(mockAppointment);
     component.loadAppointments();
 
