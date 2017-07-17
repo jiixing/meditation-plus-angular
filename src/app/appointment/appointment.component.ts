@@ -29,7 +29,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   userHasAppointment = false;
   currentTab = 'table';
 
-  localTimezone;
+  localTimezone: string;
   rootTimezone: string = moment.tz('America/Toronto').format('z');
 
   profile;
@@ -99,6 +99,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     return this.userService.isAdmin();
   }
 
+  getCurrentMoment(): moment.Moment {
+    return moment.tz('America/Toronto');
+  }
   /**
    * Method for querying appointments
    */
@@ -111,8 +114,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         this.rightBeforeAppointment = false;
         this.loadedInitially = true;
 
-        const currentDay = moment.tz('America/Toronto').weekday();
-        const currentHour = parseInt(moment.tz('America/Toronto').format('HHmm'), 10);
+        const currentMoment = this.getCurrentMoment();
+        const currentDay = currentMoment.weekday();
+        const currentHour = parseInt(currentMoment.format('HHmm'), 10);
 
         this.nextAppointments = [];
 
@@ -153,7 +157,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
    * @return {number}                  minutes until appointment
    */
   getTimeDiff(appointment) {
-    const today = moment.tz('America/Toronto').weekday();
+    const today = this.getCurrentMoment().weekday();
     const time = this.printHour(appointment.hour).split(':');
     const appointmentMoment = moment
       .tz('America/Toronto')
@@ -162,7 +166,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       .minute(parseInt(time[1], 10))
       .seconds(0)
       .milliseconds(0);
-    const currentMoment = moment.tz('America/Toronto').millisecond(0);
+    const currentMoment = this.getCurrentMoment().millisecond(0);
 
     return moment.duration(appointmentMoment.diff(currentMoment));
   }
@@ -262,7 +266,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   /**
    *  Tries to identify the user's timezone
    */
-  getLocalTimezone() {
+  getLocalTimezone(): string {
     if (this.profile && this.profile.timezone) {
       // lookup correct timezone name from profile model
       for (const k of timezones) {
