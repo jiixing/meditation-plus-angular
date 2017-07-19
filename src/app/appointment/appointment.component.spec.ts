@@ -20,19 +20,19 @@ describe('AppointmentComponent', () => {
   const currentYear = 2015, currentMonth = 5, currentDay = 3,
     currentHour = 10, currenMinute = 30;
 
-  function mockCurrentUser(user_id = mockUserId) {
-    spyOn(mockUserService, 'getUserId').and.returnValue(user_id);
+  function mockCurrentUser(userId = mockUserId) {
+    spyOn(mockUserService, 'getUserId').and.returnValue(userId);
   }
 
-  function createMockAppointment(user_id = null, time_offset = 100) {
+  function createMockAppointment(userId = null, timeOffset = 100) {
     const mockAppointment = {
       '_id': '111',
       'updatedAt': '2017-07-16T00:34:40.945Z',
       'createdAt': '2017-06-05T03:06:21.684Z',
       'weekDay': currentDay,
-      'hour': currentHour * 100 + currenMinute + time_offset, // hour is HHMM int format
+      'hour': currentHour * 100 + currenMinute + timeOffset, // hour is HHMM int format
       'user': {
-        '_id': user_id,
+        '_id': userId,
         'name': 'kelly',
         'username': 'kelly'
       }
