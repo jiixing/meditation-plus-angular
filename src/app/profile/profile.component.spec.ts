@@ -48,8 +48,4 @@ describe('ProfileComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-  // see todo.txt
-
-  // check hide user email,
-  // check hide meditation
 });
