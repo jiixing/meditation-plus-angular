@@ -10,7 +10,7 @@ export class FakeUserService {
    * @param {String} password
    * @param {String} username
    */
-  public login(email: string, password: string, username: string = undefined) {
+  public login(email: string, password: string, username?: string) {
     return TestHelper.noResponse();
   }
 
@@ -180,6 +180,10 @@ export class FakeUserService {
 
   public get(id: string) {
     return TestHelper.noResponse();
+  }
+
+  public getUserId(): string {
+    return '000000000000';
   }
 
   public save(user) {
